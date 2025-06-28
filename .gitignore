@@ -54,3 +54,53 @@ yarn-error.log*
 Thumbs.db
 ehthumbs.db
 Icon?
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# VS Code settings
+.vscode/
+
+# Logs and output
+*.log
+*.out
+*.tmp
+
+# Pip and distribution
+pip-log.txt
+pip-delete-this-directory.txt
+build/
+dist/
+*.egg-info/
+
+# Test / coverage
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+htmlcov/
+
+# Jupyter / notebooks
+.ipynb_checkpoints/
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# Audio/temporary processing
+temp/
+*.wav
+*.mp3
+*.m4a
+
+# Secrets and env files
+.env
+.env.*
+
