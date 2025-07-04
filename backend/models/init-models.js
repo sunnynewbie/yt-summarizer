@@ -1,5 +1,6 @@
 import _sequelize from "sequelize";
 const DataTypes = _sequelize.DataTypes;
+import _jobs from  "./jobs.js";
 import _logs from  "./logs.js";
 import _media from  "./media.js";
 import _processingJobs from  "./processing_jobs.js";
@@ -7,6 +8,7 @@ import _summaries from  "./summaries.js";
 import _transcripts from  "./transcripts.js";
 
 export default function initModels(sequelize) {
+  const jobs = _jobs.init(sequelize, DataTypes);
   const logs = _logs.init(sequelize, DataTypes);
   const media = _media.init(sequelize, DataTypes);
   const processingJobs = _processingJobs.init(sequelize, DataTypes);
@@ -23,6 +25,7 @@ export default function initModels(sequelize) {
   media.hasMany(transcripts, { as: "transcripts", foreignKey: "media_id"});
 
   return {
+    jobs,
     logs,
     media,
     processingJobs,

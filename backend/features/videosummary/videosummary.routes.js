@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { summarizeVideo } from './videosummary.controller.js';
+import { getSummaryById, summarizeVideo } from './videosummary.controller.js';
 
 var summaryRoute = Router();
 
-summaryRoute.post('/',summarizeVideo);
+summaryRoute.post('/', summarizeVideo);
+summaryRoute.get('/:id', getSummaryById);
 export default summaryRoute;
