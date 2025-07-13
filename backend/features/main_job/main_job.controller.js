@@ -5,6 +5,7 @@ import { processYoutubeJob } from './../../utils/job.worker.js';
 import jobs from '../../models/jobs.js';
 
 // Create new job
+
 export async function createJob(req, res) {
     const { url } = req.body;
 
