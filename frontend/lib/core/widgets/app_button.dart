@@ -25,6 +25,7 @@ class AppButton extends StatelessWidget {
   final TextStyle? textStyle;
   final IconAlignment? iconAlignment;
   final double? height;
+  final bool isLoading;
   final double? width;
 
   const AppButton({
@@ -43,17 +44,18 @@ class AppButton extends StatelessWidget {
     this.textStyle,
     this.height,
     this.width,
+    this.isLoading = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var height = this.height ?? 32;
+    var height = this.height ?? 38;
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
     final TextStyle defaultTextStyle =
         textStyle ??
-        textTheme.titleSmall!.copyWith(
+        textTheme.labelMedium!.copyWith(
           color: textColor ?? _getDefaultTextColor(theme),
           fontWeight: FontWeight.w600,
         );
@@ -62,14 +64,26 @@ class AppButton extends StatelessWidget {
         padding ?? const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0);
 
     final Widget? iconWidget = icon;
-
+    final widget = isLoading
+        ? Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 1.5,
+              constraints: BoxConstraints(
+                minHeight: 20,
+                minWidth: 20,
+                maxHeight: 20,
+                maxWidth: 20,
+              ),
+            ),
+          )
+        : Text(label);
     switch (type) {
       case CustomButtonType.filled:
         return SizedBox(
           height: height,
           width: width,
           child: ElevatedButton(
-            onPressed: onPressed,
+            onPressed: isLoading ? null : onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: color ?? theme.primaryColor,
               foregroundColor: defaultTextStyle.color,
@@ -80,7 +94,7 @@ class AppButton extends StatelessWidget {
                 borderRadius: borderRadius ?? BorderRadius.circular(8.0),
               ),
             ),
-            child: Text(label),
+            child: widget,
           ),
         );
 
@@ -89,7 +103,7 @@ class AppButton extends StatelessWidget {
           height: height,
           width: width,
           child: ElevatedButton.icon(
-            onPressed: onPressed,
+            onPressed: isLoading ? null : onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: color ?? theme.primaryColor,
               foregroundColor: defaultTextStyle.color,
@@ -102,7 +116,7 @@ class AppButton extends StatelessWidget {
             ),
             icon: iconWidget,
             iconAlignment: iconAlignment,
-            label: Text(label),
+            label: widget,
             clipBehavior: Clip.hardEdge,
           ),
         );
@@ -112,7 +126,7 @@ class AppButton extends StatelessWidget {
           height: height,
           width: width,
           child: TextButton.icon(
-            onPressed: onPressed,
+            onPressed: isLoading ? null : onPressed,
             style: TextButton.styleFrom(
               foregroundColor: defaultTextStyle.color,
               textStyle: defaultTextStyle,
@@ -120,7 +134,7 @@ class AppButton extends StatelessWidget {
             ),
             icon: iconWidget,
             iconAlignment: iconAlignment,
-            label: Text(label),
+            label: widget,
           ),
         );
       case CustomButtonType.text:
@@ -128,13 +142,13 @@ class AppButton extends StatelessWidget {
           height: height,
           width: width,
           child: TextButton(
-            onPressed: onPressed,
+            onPressed: isLoading ? null : onPressed,
             style: TextButton.styleFrom(
               foregroundColor: defaultTextStyle.color,
               textStyle: defaultTextStyle,
               padding: effectivePadding,
             ),
-            child: Text(label),
+            child: widget,
           ),
         );
 
@@ -143,7 +157,7 @@ class AppButton extends StatelessWidget {
           height: height,
           width: width,
           child: OutlinedButton(
-            onPressed: onPressed,
+            onPressed: isLoading ? null : onPressed,
             style: OutlinedButton.styleFrom(
               foregroundColor: defaultTextStyle.color,
               textStyle: defaultTextStyle,
@@ -153,7 +167,7 @@ class AppButton extends StatelessWidget {
                 borderRadius: borderRadius ?? BorderRadius.circular(8.0),
               ),
             ),
-            child: Text(label),
+            child: widget,
           ),
         );
 
@@ -162,7 +176,7 @@ class AppButton extends StatelessWidget {
           height: height,
           width: width,
           child: OutlinedButton.icon(
-            onPressed: onPressed,
+            onPressed: isLoading ? null : onPressed,
             style: OutlinedButton.styleFrom(
               foregroundColor: defaultTextStyle.color,
               textStyle: defaultTextStyle,
@@ -174,7 +188,7 @@ class AppButton extends StatelessWidget {
             ),
             icon: iconWidget,
             iconAlignment: iconAlignment,
-            label: Text(label),
+            label: widget,
           ),
         );
 
@@ -184,7 +198,7 @@ class AppButton extends StatelessWidget {
           height: height,
           width: width,
           child: ElevatedButton(
-            onPressed: onPressed,
+            onPressed: isLoading ? null : onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: color ?? theme.primaryColor,
               foregroundColor: defaultTextStyle.color,
@@ -195,7 +209,7 @@ class AppButton extends StatelessWidget {
                 borderRadius: borderRadius ?? BorderRadius.circular(8.0),
               ),
             ),
-            child: Text(label),
+            child: widget,
           ),
         );
     }

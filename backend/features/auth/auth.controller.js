@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import users from '../../models/users.js';
 import refreshTokens from '../../models/refresh_tokens.js';
 import { comparePassword, generateAccessToken, generateRefreshToken, hashPassword } from '../../utils/auth_helper.js';
+import jwt from 'jsonwebtoken';
 
 async function register(req, res, next) {
     const t = await users.sequelize.transaction(); // optional txn
@@ -106,7 +107,8 @@ async function login(req, res) {
         );
 
         await t.commit();
-        return res.status(200).json({ accessToken, token });
+        var data = { accessToken, token };
+        return res.status(200).json({ status: true, message: 'Login successfully', data: data });
     } catch (err) {
         await t.rollback();
         console.error('Login error:', err);
@@ -164,6 +166,7 @@ async function refreshaccesstoken(req, res) {
         try {
             payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         } catch (err) {
+            console.log(err);
             return res.status(401).json({ error: 'Expired or invalid refresh token.' });
         }
 
@@ -188,4 +191,8 @@ async function refreshaccesstoken(req, res) {
 
 }
 
-export { register, login, logout, refreshaccesstoken };
+async function getUser(req, res) {
+    return res.status(200).json({ success: true, message: 'User fetched successfully', data: req.user.toJSON() });
+}
+
+export { register, login, logout, refreshaccesstoken, getUser };

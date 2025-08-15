@@ -53,19 +53,26 @@ class AppTextField extends StatelessWidget {
       textInputAction: textInputAction,
       onFieldSubmitted: onFieldSubmitted,
       validator: validator,
-      style: textStyle,
-      decoration: InputDecoration(
+      style: textStyle??context.labelLarge,
+      decoration: InputDecoration.collapsed(hintText: hintText).copyWith(
         labelText: label,
-        hintText: hintText,
+        border: Theme.of(context).inputDecorationTheme.border,
+        disabledBorder: Theme.of(context).inputDecorationTheme.disabledBorder,
+        enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+        focusedBorder: Theme.of(context).inputDecorationTheme.focusedBorder,
+        errorBorder: Theme.of(context).inputDecorationTheme.errorBorder,
+        focusedErrorBorder: Theme.of(
+          context,
+        ).inputDecorationTheme.focusedErrorBorder,
+        fillColor: fillColor,
         hintStyle: textStyle,
         filled: true,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : prefix,
         suffixIcon: suffixIcon,
         contentPadding:
             contentPadding ??
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
     );
   }
-
 }

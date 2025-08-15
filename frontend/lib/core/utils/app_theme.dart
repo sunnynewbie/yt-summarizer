@@ -1,12 +1,14 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 abstract final class AppTheme {
   // The FlexColorScheme defined light mode ThemeData.
   static ThemeData light = FlexThemeData.light(
     // Using FlexColorScheme built-in FlexScheme enum based colors
     scheme: FlexScheme.shadRed,
+    textTheme: GoogleFonts.interTextTheme(),
     // Surface color adjustments.
     surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
     blendLevel: 1,

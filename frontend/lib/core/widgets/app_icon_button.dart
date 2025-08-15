@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum ButtonShape { round, roundedRectangle, rectangle }
 
-class AppCustomButton extends StatelessWidget {
+class AppIconButton extends StatelessWidget {
   final Widget child;
   final VoidCallback? onPressed;
   final Color? backgroundColor;
@@ -15,7 +15,7 @@ class AppCustomButton extends StatelessWidget {
   final double? iconSize; // for when you're using an Icon in the child
   final bool disabledElevation;
 
-  const AppCustomButton({
+  const AppIconButton({
     super.key,
     required this.child,
     this.onPressed,
@@ -71,6 +71,9 @@ class AppCustomButton extends StatelessWidget {
       icon: child,
       style: buttonStyle,
       iconSize: iconSize,
+      constraints: BoxConstraints(),
+      padding: EdgeInsets.zero
+      ,
     );
   }
 }

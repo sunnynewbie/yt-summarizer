@@ -1,5 +1,6 @@
 import express from 'express';
-import { login, logout, refreshaccesstoken, register } from './auth.controller.js';
+import { getUser, login, logout, refreshaccesstoken, register } from './auth.controller.js';
+import { requireAuth } from '../../utils/auth.guards.js';
 
 const authRouter = express.Router();
 
@@ -68,7 +69,7 @@ const authRouter = express.Router();
  *                   description: Error message
  * 
  */
-authRouter.post('/login',login);
+authRouter.post('/login', login);
 
 /**
  * @swagger
@@ -175,7 +176,7 @@ authRouter.post('/register', register);
  *                   type: string
  *                   description: Error message
  */
-authRouter.post('/logout',logout);
+authRouter.post('/logout', logout);
 
 /**
  * @swagger
@@ -239,6 +240,30 @@ authRouter.post('/logout',logout);
  *                   description: Error message
  */
 authRouter.post('/refresh', refreshaccesstoken);
-authRouter.get('/me', async (req, res) => { });
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     tags:
+ *       - Auth
+ *     summary: Get current user
+ *     security:
+ *       - Authorization: []
+ *     responses:
+ *       200:
+ *         description: Current user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ */
+authRouter.get('/me', requireAuth, getUser);
 authRouter.get('social-login', async (req, res) => { });
 export default authRouter;  

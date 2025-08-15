@@ -64,10 +64,10 @@ planRoutes.get('/', getPlans);
  *                   description: Single plan
  * 
  */
-planRoutes.get(/:id/, getSinglePlan);
+planRoutes.get('/:id', getSinglePlan);
 /**
  * @swagger
- * /plan:
+ * /plans:
  *   post:
  *     tags:
  *       - Plan
@@ -177,7 +177,7 @@ planRoutes.post('/', addPlan);
  *                   description: Single plan
  * 
  */
-planRoutes.patch(/:id/, updatePlan);
+planRoutes.patch('/:id', updatePlan);
 
 /**
  * @swagger
@@ -214,6 +214,6 @@ planRoutes.patch(/:id/, updatePlan);
  *                   description: Single plan
  * 
 */
-planRoutes.delete(/:id/, deletePlan);
+planRoutes.delete("/:id/", deletePlan);
 
 export default planRoutes

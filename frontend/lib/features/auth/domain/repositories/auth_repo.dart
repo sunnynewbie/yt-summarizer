@@ -1,15 +1,17 @@
-import 'package:dio/dio.dart';
+import 'package:frontend/features/auth/domain/entities/login_model.dart';
+import 'package:frontend/features/auth/domain/entities/user_model.dart';
+import 'package:frontend/network/api_response.dart';
 
 abstract class AuthRepository {
-  Future<Response?> login(String username, String password);
+  Future<ApiResponse<LoginModel?>?> login(Map<String, dynamic> data);
 
-  Future<Response?> register(String username, String password);
+  Future<ApiResponse?> register(Map<String, dynamic> data);
 
-  Future<Response?> logout();
+  Future<ApiResponse?> logout();
 
-  Future<Response?> checkToken();
+  Future<ApiResponse?> checkToken();
 
-  Future<Response?> refresh();
+  Future<ApiResponse<LoginModel?>?> refresh();
 
-  Future<Response?> fetchUser();
+  Future<ApiResponse<UserModel?>?> fetchUser();
 }

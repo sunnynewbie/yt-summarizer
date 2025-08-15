@@ -42,7 +42,7 @@ export default class users extends Model {
     sequelize,
     tableName: 'users',
     schema: 'public',
-    timestamps: true,
+    timestamps: false,
     indexes: [
       {
         name: "users_email_key",
