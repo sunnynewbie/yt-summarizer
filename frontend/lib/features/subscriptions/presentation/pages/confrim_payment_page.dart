@@ -105,7 +105,7 @@ class _ConfirmPaymentPageState extends State<ConfirmPaymentPage> {
                                           if (user != null) {
                                             confirmPaymentBloc.add(
                                               StartSubscriptionEvent(
-                                                state.planModel!.id,
+                                                state.planModel!.id.toString(),
                                                 user.id,
                                               ),
                                             );

@@ -1,5 +1,14 @@
 import e from "express";
 import { downloadAudio } from "./video_process.service.js";
+import { setAuditContext } from "../../utils/audit.js";
+
+function getHostname(value) {
+    try {
+        return new URL(value).hostname;
+    } catch (error) {
+        return null;
+    }
+}
 
 async function sumbitVideo(req, res, next) {
 
@@ -13,6 +22,15 @@ async function sumbitVideo(req, res, next) {
         }
         if (request.url) {
             const audio = await downloadAudio(request.url, './temp');
+            setAuditContext(req, {
+                action: 'video_process.submit',
+                featureArea: 'video_process',
+                resourceType: 'video',
+                metadata: {
+                    source_host: getHostname(request.url),
+                    output_generated: Boolean(audio),
+                },
+            });
             // var transcribed = await fetch('http://localhost:5000/transcript', {
             //     body: JSON.stringify({
             //         audio: audio

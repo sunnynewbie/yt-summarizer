@@ -24,7 +24,10 @@ class AuthDataSouceImpl extends AuthDataSource {
   Future<ApiResponse?> checkToken() async {
     try {
       var token = SharedPrefsHelper.getToken();
-      var data = {'token': token!.accessToken};
+      if (token?.token == null || token!.token!.isEmpty) {
+        return null;
+      }
+      var data = {'refreshToken': token.token};
 
       var response = await ApiService().post(
         path: ApiPath.refreshToken,
@@ -48,11 +51,15 @@ class AuthDataSouceImpl extends AuthDataSource {
       }
       return ApiResponse.fromResponse(
         response,
-        fromJson: (data) =>
-            data['data'] is Map ? UserModel.fromJson(data['data']) : null,
+        fromJson: (data) {
+          if (data is Map && data['data'] is Map) {
+            return UserModel.fromJson(Map<String, dynamic>.from(data['data']));
+          }
+          return null;
+        },
       );
-    } on Exception catch (e) {
-      print(e);
+    } on Exception {
+      return null;
     }
     return null;
   }
@@ -69,10 +76,14 @@ class AuthDataSouceImpl extends AuthDataSource {
       }
       return ApiResponse.fromResponse(
         response,
-        fromJson: (data) =>
-            data['data'] is Map ? LoginModel.fromJson(data['data']) : null,
+        fromJson: (data) {
+          if (data is Map && data['data'] is Map) {
+            return LoginModel.fromJson(Map<String, dynamic>.from(data['data']));
+          }
+          return null;
+        },
       );
-    } on Exception catch (e) {
+    } on Exception {
       return null;
     }
   }
@@ -80,12 +91,19 @@ class AuthDataSouceImpl extends AuthDataSource {
   @override
   Future<ApiResponse?> logout() async {
     try {
-      var response = await ApiService().get(path: ApiPath.logout);
+      final authData = SharedPrefsHelper.getToken();
+      if (authData?.token == null || authData!.token!.isEmpty) {
+        return null;
+      }
+      var response = await ApiService().post(
+        path: ApiPath.logout,
+        data: {'refreshToken': authData.token},
+      );
       if (response == null) {
         return null;
       }
       return ApiResponse.fromResponse(response);
-    } on Exception catch (e) {
+    } on Exception {
       return null;
     }
   }
@@ -104,10 +122,14 @@ class AuthDataSouceImpl extends AuthDataSource {
       }
       return ApiResponse.fromResponse(
         response,
-        fromJson: (data) =>
-            data['data'] is Map ? LoginModel.fromJson(data['data']) : null,
+        fromJson: (data) {
+          if (data is Map) {
+            return LoginModel.fromJson(Map<String, dynamic>.from(data));
+          }
+          return null;
+        },
       );
-    } on Exception catch (e) {
+    } on Exception {
       return null;
     }
   }
@@ -122,8 +144,20 @@ class AuthDataSouceImpl extends AuthDataSource {
       if (response == null) {
         return null;
       }
-      return ApiResponse.fromResponse(response);
-    } on Exception catch (e) {
+      return ApiResponse.fromResponse(
+        response,
+        fromJson: (data) {
+          if (data is Map) {
+            final payload =
+                data['data'] is Map<String, dynamic>
+                    ? Map<String, dynamic>.from(data['data'])
+                    : Map<String, dynamic>.from(data);
+            return LoginModel.fromJson(payload);
+          }
+          return null;
+        },
+      );
+    } on Exception {
       return null;
     }
   }

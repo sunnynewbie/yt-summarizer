@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start:fe": "node frontend/server.js",
+    "dev:fe": "nodemon frontend/server.js",
+    "dev:worker": "node mock-worker.js",
+    "run:local": "powershell -ExecutionPolicy Bypass -File .\\run-local.ps1"
   },
   "keywords": [],
   "author": "",

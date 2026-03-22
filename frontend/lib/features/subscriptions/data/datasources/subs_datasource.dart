@@ -24,7 +24,7 @@ class SubsDataSourceImpl implements SubsDataSource {
     required Map<String, dynamic> data,
   }) async {
     try {
-      var response = await ApiService().delete(path: ApiPath.subscribe);
+      var response = await ApiService().post(path: ApiPath.unsubscribe);
       return response;
     } catch (e) {
       print(e);
@@ -95,7 +95,7 @@ class SubsDataSourceImpl implements SubsDataSource {
   @override
   Future<Response?> getSubscription({required String subId}) async {
     try {
-      var response = await ApiService().get(path: ApiPath.getActiveSubs(subId));
+      var response = await ApiService().get(path: ApiPath.activeSubscription);
       return response;
     } catch (e) {
       print(e);
@@ -105,9 +105,7 @@ class SubsDataSourceImpl implements SubsDataSource {
   @override
   Future<Response?> getSubscriptionHistory({required String usrtId}) async {
     try {
-      var response = await ApiService().get(
-        path: ApiPath.getSubsHistory(usrtId),
-      );
+      var response = await ApiService().get(path: ApiPath.subscriptionHistory);
       return response;
     } catch (e) {
       print(e);

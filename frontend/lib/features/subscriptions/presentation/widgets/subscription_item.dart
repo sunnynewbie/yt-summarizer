@@ -40,7 +40,7 @@ class SubscriptionItem extends StatelessWidget {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: '${planModel?.price ?? '0'}',
+                            text: '${planModel.price}',
                             style: context.titleLarge.w600,
                           ),
                           TextSpan(
@@ -52,7 +52,7 @@ class SubscriptionItem extends StatelessWidget {
                       ),
                     ),
                     Html(
-                      data: planModel.plan_content,
+                      data: planModel.plan_content ?? '',
                       style: {
                         "ul": Style(
                           margin: Margins.symmetric(horizontal: 10),

@@ -1,5 +1,6 @@
 import express from 'express';
 import { addPlan, deletePlan, getPlans, getSinglePlan, updatePlan } from './plans.controller.js';
+import { requireAuth, requireRole } from '../../utils/auth.guards.js';
 
 const planRoutes = express.Router()
 
@@ -116,7 +117,7 @@ planRoutes.get('/:id', getSinglePlan);
  *                   description: Single plan
  * 
  */
-planRoutes.post('/', addPlan);
+planRoutes.post('/', requireAuth, requireRole('admin'), addPlan);
 /**
  * @swagger
  * /plans/{id}:
@@ -177,7 +178,7 @@ planRoutes.post('/', addPlan);
  *                   description: Single plan
  * 
  */
-planRoutes.patch('/:id', updatePlan);
+planRoutes.patch('/:id', requireAuth, requireRole('admin'), updatePlan);
 
 /**
  * @swagger
@@ -214,6 +215,6 @@ planRoutes.patch('/:id', updatePlan);
  *                   description: Single plan
  * 
 */
-planRoutes.delete("/:id/", deletePlan);
+planRoutes.delete("/:id/", requireAuth, requireRole('admin'), deletePlan);
 
 export default planRoutes

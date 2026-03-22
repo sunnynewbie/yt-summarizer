@@ -32,7 +32,7 @@ export default class subscriptionPlan extends Model {
       },
       is_active: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        allowNull: false,
         defaultValue: true
       }
     }, {

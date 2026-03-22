@@ -1,7 +1,46 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:frontend/core/utils/pref_util.dart';
 import 'package:frontend/network/api_path.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+
+Map<String, dynamic> _defaultApiHeaders() {
+  final headers = <String, dynamic>{};
+  if (ApiPath.baseUrl.contains('ngrok-free.app')) {
+    headers['ngrok-skip-browser-warning'] = true;
+  }
+  headers['x-client-platform'] = _clientPlatform();
+  return headers;
+}
+
+String _clientPlatform() {
+  if (kIsWeb) {
+    return 'flutter-web';
+  }
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
+      return 'flutter-android';
+    case TargetPlatform.iOS:
+      return 'flutter-ios';
+    case TargetPlatform.macOS:
+      return 'flutter-macos';
+    case TargetPlatform.windows:
+      return 'flutter-windows';
+    case TargetPlatform.linux:
+      return 'flutter-linux';
+    case TargetPlatform.fuchsia:
+      return 'flutter-fuchsia';
+  }
+}
+
+String _requestId() {
+  final random = Random.secure();
+  final bytes = List<int>.generate(8, (_) => random.nextInt(256));
+  final hex = bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+  return '${DateTime.now().millisecondsSinceEpoch}-$hex';
+}
 
 enum ApiStatus {
   success,
@@ -30,11 +69,20 @@ class ApiService {
           BaseOptions(
             contentType: Headers.jsonContentType,
             baseUrl: ApiPath.baseUrl,
-            headers: {'ngrok-skip-browser-warning': true},
+            headers: _defaultApiHeaders(),
           ),
         )
         ..interceptors.add(
           PrettyDioLogger(compact: true, responseBody: false, error: true),
+        )
+        ..interceptors.add(
+          InterceptorsWrapper(
+            onRequest: (options, handler) {
+              options.headers['x-request-id'] = _requestId();
+              options.headers['x-client-platform'] = _clientPlatform();
+              handler.next(options);
+            },
+          ),
         );
 
   Future<Response?> get({

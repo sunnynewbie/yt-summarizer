@@ -4,6 +4,7 @@ class AppRoutes {
   static const settings = "/settings";
   static const history = "/history";
   static const subscriptions = "/subscriptions";
+  static const auditLogs = '/audit-logs';
   static const login = '/login';
   static const signup = '/signup';
   static const addPaymentPage = '/payment';

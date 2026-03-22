@@ -1,5 +1,6 @@
 import 'package:frontend/core/route_util/app_routes.dart';
 import 'package:frontend/core/utils/pref_util.dart';
+import 'package:frontend/features/audit/presentation/pages/audit_logs_page.dart';
 import 'package:frontend/features/auth/presentation/pages/login_page.dart';
 import 'package:frontend/features/auth/presentation/pages/register_page.dart';
 import 'package:frontend/features/history/presentation/pages/history_page.dart';
@@ -64,6 +65,11 @@ class RouteSetup {
             builder: (context, state) => SettingsPage(),
           ),
           GoRoute(
+            path: AppRoutes.auditLogs,
+            name: AppRoutes.auditLogs,
+            builder: (context, state) => AuditLogsPage(),
+          ),
+          GoRoute(
             path: AppRoutes.history,
             name: AppRoutes.history,
             builder: (context, state) => HistoryPage(),
@@ -79,8 +85,6 @@ class RouteSetup {
       GoRoute(
         path: AppRoutes.confrimPlan,
         builder: (context, state) {
-          final id = state.uri.queryParameters['id'];
-          print(id);
           return ConfirmPaymentPage();
         },
       ),

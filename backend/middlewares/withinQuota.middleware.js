@@ -1,10 +1,9 @@
-import { Op } from 'sequelize';
 import dayjs from 'dayjs';
 import userUsage from '../models/user_usage.js';
 
 export const withinQuota = async (req, res, next) => {
     try {
-        const userId = req.user?.id || req.body.user_id || req.params.user_id;
+        const userId = req.user?.id;
         if (!userId) return res.status(401).json({ error: 'User ID required' });
 
         if (!req.userPlan) {

@@ -4,6 +4,7 @@ import users from '../../models/users.js';
 import refreshTokens from '../../models/refresh_tokens.js';
 import { comparePassword, generateAccessToken, generateRefreshToken, hashPassword } from '../../utils/auth_helper.js';
 import jwt from 'jsonwebtoken';
+import { setAuditContext } from '../../utils/audit.js';
 
 async function register(req, res, next) {
     const t = await users.sequelize.transaction(); // optional txn
@@ -61,6 +62,15 @@ async function register(req, res, next) {
         );
 
         await t.commit();
+        setAuditContext(req, {
+            action: 'auth.register',
+            featureArea: 'auth',
+            resourceType: 'user',
+            resourceId: user.id,
+            actorUserId: user.id,
+            actorRole: user.role,
+            metadata: { registration_method: 'password' },
+        });
         return res.status(201).json({ accessToken, token });
     } catch (err) {
         await t.rollback();
@@ -107,6 +117,15 @@ async function login(req, res) {
         );
 
         await t.commit();
+        setAuditContext(req, {
+            action: 'auth.login',
+            featureArea: 'auth',
+            resourceType: 'user',
+            resourceId: user.id,
+            actorUserId: user.id,
+            actorRole: user.role,
+            metadata: { login_method: 'password' },
+        });
         var data = { accessToken, token };
         return res.status(200).json({ status: true, message: 'Login successfully', data: data });
     } catch (err) {
@@ -140,6 +159,12 @@ async function logout(req, res) {
         if (!deleted)
             return res.status(404).json({ error: 'Token already invalid or not found.' });
 
+        setAuditContext(req, {
+            action: 'auth.logout',
+            featureArea: 'auth',
+            resourceType: 'refresh_token',
+            metadata: { token_revoked: true },
+        });
         return res.status(200).json({ message: 'Logged out successfully.' });
     } catch (err) {
         console.error('Logout error:', err);
@@ -183,6 +208,14 @@ async function refreshaccesstoken(req, res) {
             trial_expires_at: user.trial_expires_at,
         });
 
+        setAuditContext(req, {
+            action: 'auth.refresh',
+            featureArea: 'auth',
+            resourceType: 'user',
+            resourceId: user.id,
+            actorUserId: user.id,
+            actorRole: user.role,
+        });
         return res.status(200).json({ accessToken: newAccessToken });
     } catch (err) {
         console.error('Refresh token error:', err);
@@ -192,6 +225,14 @@ async function refreshaccesstoken(req, res) {
 }
 
 async function getUser(req, res) {
+    setAuditContext(req, {
+        action: 'auth.me',
+        featureArea: 'auth',
+        resourceType: 'user',
+        resourceId: req.user.id,
+        actorUserId: req.user.id,
+        actorRole: req.user.role,
+    });
     return res.status(200).json({ success: true, message: 'User fetched successfully', data: req.user.toJSON() });
 }
 

@@ -3,13 +3,13 @@ import subscriptionsTbl from "../models/subscriptions_tbl.js";
 
 export const hasActivePlan = async (req, res, next) => {
     try {
-        const userId = req.user?.id || req.body.user_id || req.params.user_id;
+        const userId = req.user?.id;
 
         if (!userId) return res.status(401).json({ error: 'User ID required' });
 
         const subscription = await subscriptionsTbl.findOne({
             where: { user_id: userId, is_active: true },
-            include: subscriptionPlan
+            include: [{ model: subscriptionPlan, as: 'plan' }]
         });
 
         if (!subscription) {
@@ -18,9 +18,9 @@ export const hasActivePlan = async (req, res, next) => {
 
         req.userPlan = {
             plan_id: subscription.plan_id,
-            plan_name: subscription.subscription_plan.plan_name,
-            video_limit: subscription.subscription_plan.video_limit,
-            minute_limit: subscription.subscription_plan.minute_limit,
+            plan_name: subscription.plan.plan_name,
+            video_limit: subscription.plan.video_limit,
+            minute_limit: subscription.plan.minute_limit,
         };
 
         next();

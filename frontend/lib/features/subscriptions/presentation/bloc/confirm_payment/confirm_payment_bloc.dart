@@ -39,7 +39,7 @@ class ConfirmPaymentBloc
     Emitter<ConfirmPaymentState> emit,
   ) async {
     emit.call(state.copyWith(apiStatus: ApiStatus.userActionLoading));
-    var response = await _startSubscriptionUsecase.call({});
+    var response = await _startSubscriptionUsecase.call({'plan_id': event.id});
     if (response == null) {
       emit.call(state.copyWith(apiStatus: ApiStatus.error));
       return;

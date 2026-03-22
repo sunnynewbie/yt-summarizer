@@ -1,25 +1,24 @@
-import { exec } from 'child_process';
-import { dirname, resolve } from 'path';
-import { fileURLToPath } from 'url';
+import { execFile } from 'child_process';
+import { env } from '../../config/env.js';
 
 export function transcribeLocally(audioPath, scriptPath) {
     return new Promise((resolve, reject) => {
+        const args = [scriptPath, audioPath];
+        if (env.ffmpegPath) {
+            args.push('--ffmpeg-path', env.ffmpegPath);
+        }
 
-        // Get the current module's URL
-        const command = `python ${scriptPath} ${audioPath}`;
-        console.log(command);
-
-        exec(command, { maxBuffer: 1024 * 1024 * 5 }, (error, stdout, stderr) => {
+        execFile('python', args, { maxBuffer: 1024 * 1024 * 5 }, (error, stdout, stderr) => {
             if (error) {
-                console.error('❌ Whisper error:', stderr || error.message);
+                console.error('Whisper error:', stderr || error.message);
                 return reject(stderr || error.message);
             }
-            var result = stdout
 
             if (!stdout || stdout.trim() === '') {
-                return reject('❌ No transcript found in output.');
+                return reject('No transcript found in output.');
             }
-            return resolve(result);
+
+            return resolve(stdout);
         });
     });
 }

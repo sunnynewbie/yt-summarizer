@@ -104,3 +104,12 @@ temp/
 .env
 .env.*
 
+# Backend local/runtime artifacts
+/backend/*.err.log
+/backend/*.out.log
+/backend/*.run.err.log
+/backend/*.run.out.log
+/backend/temp/
+/backend/sample.wav
+/backend/.python-version
+

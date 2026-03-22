@@ -1,19 +1,26 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:frontend/core/utils/converters/bool_converter.dart';
 import 'package:frontend/core/utils/converters/date_time_converter.dart';
-import 'package:frontend/core/utils/converters/string_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
-@JsonSerializable(
-  converters: [StringConverter(), DateTimeConverter(), BooleanConverter()],
-)
+@JsonSerializable()
 class UserModel {
   String id;
   String email;
-  String name;
+  String? name;
+
+  @JsonKey(name: 'password_hash')
+  String? password_hash;
+
   String role;
+
+  @BooleanConverter()
   bool email_verified;
+
+  @DateTimeConverter()
   DateTime trial_expires_at;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -24,7 +31,8 @@ class UserModel {
   UserModel({
     required this.id,
     required this.email,
-    required this.name,
+    this.name,
+    this.password_hash,
     required this.role,
     required this.email_verified,
     required this.trial_expires_at,
@@ -38,11 +46,19 @@ class UserModel {
           id == other.id &&
           email == other.email &&
           name == other.name &&
+          password_hash == other.password_hash &&
           role == other.role &&
           email_verified == other.email_verified &&
           trial_expires_at == other.trial_expires_at;
 
   @override
-  int get hashCode =>
-      Object.hash(id, email, name, role, email_verified, trial_expires_at);
+  int get hashCode => Object.hash(
+    id,
+    email,
+    name,
+    password_hash,
+    role,
+    email_verified,
+    trial_expires_at,
+  );
 }

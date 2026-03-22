@@ -32,6 +32,33 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+coverage/
+.packages
+.metadata
+*.tmp
+*.temp
+
+# Local env / machine-specific config
+.env
+.env.*
+*.local
+
+# Flutter generated files
+**/generated_plugin_registrant.dart
+**/flutter_export_environment.sh
+**/Flutter/ephemeral/
+**/Flutter/Generated.xcconfig
+**/Flutter/flutter_lldbinit
+**/flutter/ephemeral/
+**/flutter/generated_plugins.cmake
+**/flutter/generated_plugin_registrant.cc
+**/flutter/generated_plugin_registrant.h
+**/flutter/generated_plugins.cmake
+**/flutter/GeneratedPluginRegistrant.*
+
+# Optional local tooling
+.fvm/
+.idea_modules/
 
 # Symbolication related
 app.*.symbols

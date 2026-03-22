@@ -2,7 +2,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/users.js';
 import 'dotenv/config';
-import e from 'express';
 
 /**
  * requireAuth
@@ -36,6 +35,20 @@ const requireAuth = async (req, res, next) => {
         console.error('requireAuth error:', err);
         return res.status(500).json({ error: 'Internal server error.' });
     }
+};
+
+const requireRole = (...allowedRoles) => {
+    return (req, res, next) => {
+        if (!req.user) {
+            return res.status(401).json({ error: 'Authentication required.' });
+        }
+
+        if (!allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({ error: 'Insufficient permissions.' });
+        }
+
+        return next();
+    };
 };
 
 /**
@@ -87,4 +100,4 @@ const requireVerifiedIfTrialExpired = (req, res, next) => {
         return res.status(500).json({ error: 'Internal server error.' });
     }
 };
-export { requireAuth, requireProOrActiveTrial, requireVerifiedIfTrialExpired };
+export { requireAuth, requireRole, requireProOrActiveTrial, requireVerifiedIfTrialExpired };

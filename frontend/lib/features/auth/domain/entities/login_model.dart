@@ -1,12 +1,13 @@
-import 'package:frontend/core/utils/converters/string_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'login_model.g.dart';
 
-@JsonSerializable(converters: [StringConverter()])
+@JsonSerializable()
 class LoginModel {
   String accessToken;
-  String token;
+
+  @JsonKey(readValue: _readTokenValue)
+  String? token;
 
   factory LoginModel.fromJson(Map<String, dynamic> json) =>
       _$LoginModelFromJson(json);
@@ -15,6 +16,10 @@ class LoginModel {
 
   LoginModel({
     required this.accessToken,
-    required this.token,
+    this.token,
   });
+
+  static Object? _readTokenValue(Map json, String key) {
+    return json[key] ?? json['refreshToken'];
+  }
 }

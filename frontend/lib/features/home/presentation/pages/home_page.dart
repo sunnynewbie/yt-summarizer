@@ -37,6 +37,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    String initialFor(String? value) {
+      if (value == null || value.isEmpty) {
+        return '';
+      }
+      return value.substring(0, 1);
+    }
+
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: dashboardBloc),
@@ -98,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                         textStyle: context.labelMedium.w600.primary,
                         icon: CircleAvatar(
                           child: Text(
-                            state.userModel?.name.substring(0, 1) ?? '',
+                            initialFor(state.userModel?.name),
                           ),
                         ),
                         onPressed: state.apiStatus.isLoading

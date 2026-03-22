@@ -1,13 +1,12 @@
-class CancelSubModel{
-  String userId;
+import 'package:json_annotation/json_annotation.dart';
 
-  CancelSubModel({
-    required this.userId,
-  });
+part 'cancel_sub_model.g.dart';
 
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': this.userId,
-    };
-  }
+@JsonSerializable(createFactory: false)
+class CancelSubModel {
+  const CancelSubModel();
+
+  Map<String, dynamic> toJson() => _$CancelSubModelToJson(this);
+
+  Map<String, dynamic> toMap() => toJson();
 }

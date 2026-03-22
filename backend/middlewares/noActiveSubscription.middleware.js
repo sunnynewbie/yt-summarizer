@@ -2,7 +2,7 @@ import subscriptionsTbl from '../models/subscriptions_tbl.js';
 
 export const noActiveSubscription = async (req, res, next) => {
     try {
-        const userId = req.user?.id || req.body.user_id;
+        const userId = req.user?.id;
 
         if (!userId) {
             return res.status(400).json({ error: 'User ID missing from request.' });

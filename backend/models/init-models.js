@@ -1,5 +1,6 @@
 import _sequelize from "sequelize";
 const DataTypes = _sequelize.DataTypes;
+import _auditLogs from  "./audit_logs.js";
 import _jobs from  "./jobs.js";
 import _logs from  "./logs.js";
 import _media from  "./media.js";
@@ -14,6 +15,7 @@ import _userUsage from  "./user_usage.js";
 import _users from  "./users.js";
 
 export default function initModels(sequelize) {
+  const auditLogs = _auditLogs.init(sequelize, DataTypes);
   const jobs = _jobs.init(sequelize, DataTypes);
   const logs = _logs.init(sequelize, DataTypes);
   const media = _media.init(sequelize, DataTypes);
@@ -27,6 +29,7 @@ export default function initModels(sequelize) {
   const userUsage = _userUsage.init(sequelize, DataTypes);
   const users = _users.init(sequelize, DataTypes);
 
+  auditLogs.belongsTo(users, { as: "actor_user", foreignKey: "actor_user_id"});
   logs.belongsTo(media, { as: "medium", foreignKey: "media_id"});
   media.hasMany(logs, { as: "logs", foreignKey: "media_id"});
   processingJobs.belongsTo(media, { as: "medium", foreignKey: "media_id"});
@@ -39,8 +42,11 @@ export default function initModels(sequelize) {
   subscriptionPlan.hasMany(subscriptionsTbl, { as: "subscriptions_tbls", foreignKey: "plan_id"});
   refreshTokens.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(refreshTokens, { as: "refresh_tokens", foreignKey: "user_id"});
+  users.hasMany(auditLogs, { as: "audit_logs", foreignKey: "actor_user_id"});
   subscriptionsTbl.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(subscriptionsTbl, { as: "subscriptions_tbls", foreignKey: "user_id"});
+  jobs.belongsTo(users, { as: "user", foreignKey: "user_id"});
+  users.hasMany(jobs, { as: "jobs", foreignKey: "user_id"});
   userSocialAccounts.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(userSocialAccounts, { as: "user_social_accounts", foreignKey: "user_id"});
   userUsage.belongsTo(users, { as: "user", foreignKey: "user_id"});
@@ -49,6 +55,7 @@ export default function initModels(sequelize) {
   return {
     jobs,
     logs,
+    auditLogs,
     media,
     processingJobs,
     refreshTokens,

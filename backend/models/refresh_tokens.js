@@ -12,7 +12,7 @@ export default class refreshTokens extends Model {
     },
     user_id: {
       type: DataTypes.UUID,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'users',
         key: 'id'
@@ -24,7 +24,7 @@ export default class refreshTokens extends Model {
     },
     expires_at: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: false
     }
   }, {
     sequelize,
@@ -32,6 +32,19 @@ export default class refreshTokens extends Model {
     schema: 'public',
     timestamps: false,
     indexes: [
+      {
+        name: "idx_refresh_tokens_user_id",
+        fields: [
+          { name: "user_id" },
+        ]
+      },
+      {
+        name: "refresh_tokens_token_key",
+        unique: true,
+        fields: [
+          { name: "token" },
+        ]
+      },
       {
         name: "refresh_tokens_pkey",
         unique: true,

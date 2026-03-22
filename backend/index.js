@@ -1,14 +1,23 @@
 import http from 'http';
 import app from './app.js';
-import env from 'dotenv';
+import './config/env.js';
+import { assertRequiredEnv, env } from './config/env.js';
 import { connectDB } from './db.js';
-env.config('../.env');
 
 const server = http.createServer(app);
 
+async function startServer() {
+  try {
+    assertRequiredEnv();
+    await connectDB();
 
-server.listen(5000, async () => {
-  await connectDB();
+    server.listen(env.port, () => {
+      console.log(`Server is running on port ${env.port}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
 
-  console.log('Server is running on port 5000');
-});
+startServer();

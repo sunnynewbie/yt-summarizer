@@ -10,6 +10,14 @@ export default class jobs extends Model {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
+    user_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
+    },
     video_url: {
       type: DataTypes.TEXT,
       allowNull: false
@@ -57,6 +65,12 @@ export default class jobs extends Model {
     schema: 'public',
     timestamps: true,
     indexes: [
+      {
+        name: "idx_jobs_user_id",
+        fields: [
+          { name: "user_id" },
+        ]
+      },
       {
         name: "jobs_pkey",
         unique: true,

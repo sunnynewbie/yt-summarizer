@@ -25,18 +25,18 @@ export default class users extends Model {
     },
     role: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: false,
       defaultValue: "user"
     },
     email_verified: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: false,
       defaultValue: false
     },
     trial_expires_at: {
       type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('(now() + 7 days')
+      allowNull: false,
+      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP + INTERVAL '7 days'")
     }
   }, {
     sequelize,

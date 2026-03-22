@@ -12,7 +12,7 @@ export default class subscriptionsTbl extends Model {
     },
     user_id: {
       type: DataTypes.UUID,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'users',
         key: 'id'
@@ -20,7 +20,7 @@ export default class subscriptionsTbl extends Model {
     },
     plan_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'subscription_plan',
         key: 'id'
@@ -28,7 +28,7 @@ export default class subscriptionsTbl extends Model {
     },
     start_date: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     },
     end_date: {
@@ -37,7 +37,7 @@ export default class subscriptionsTbl extends Model {
     },
     is_active: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: false,
       defaultValue: true
     }
   }, {

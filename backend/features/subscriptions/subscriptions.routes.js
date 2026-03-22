@@ -1,66 +1,34 @@
 import express from 'express';
 import { noActiveSubscription } from '../../middlewares/noActiveSubscription.middleware.js';
-import { cancelSubscription, createSubscription, getUserSubscription, getUserSubscriptionHistory } from './subscriptions.controller.js';
+import { cancelSubscription, createSubscription, getCurrentSubscription, getUserSubscriptionHistory } from './subscriptions.controller.js';
+import { requireAuth } from '../../utils/auth.guards.js';
 
 const subsRoutes = express.Router();
+
 /**
  * @swagger
- * /subscribe:
+ * /subscriptions/subscribe:
  *   post:
  *     tags:
  *       - Subscription
- *     summary: Subscribe to a plan
+ *     summary: Create a subscription for the current user
+ *     security:
+ *       - Authorization: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - plan_id
  *             properties:
- *               user_id:
- *                 type: string
- *                 description: User ID
  *               plan_id:
  *                 type: string
- *                 description: Plan ID
+ *                 description: Subscription plan ID
  *     responses:
  *       201:
- *         description: Subscription created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object 
- *               properties:
- *                 success:
- *                   type: boolean
- *                   description: Success status
- *                 message:
- *                   type: string
- *                   description: Success message
- *                 data:
- *                   type: object
- *                   description: Subscription object
- */
-subsRoutes.post('/subscribe', noActiveSubscription, createSubscription)
-/**
- * @swagger
- * /subscribe/user/{id}:
- *   get:
- *     tags:
- *       - Subscription
- *     summary: Get user subscription
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         type: string
- *         example: 1234
- *         description: User ID
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Success
+ *         description: Subscription created
  *         content:
  *           application/json:
  *             schema:
@@ -68,36 +36,78 @@ subsRoutes.post('/subscribe', noActiveSubscription, createSubscription)
  *               properties:
  *                 success:
  *                   type: boolean
- *                   description: Success status
- *                 message:
- *                   type: string
- *                   description: Success message
  *                 data:
  *                   type: object
- *                   description: Subscription object
- * 
+ *       400:
+ *         description: Validation error or active subscription already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       404:
+ *         description: Subscription plan not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Internal server error
  */
-subsRoutes.get('/user/:id', getUserSubscription)
+subsRoutes.post('/subscribe', requireAuth, noActiveSubscription, createSubscription);
+
 /**
  * @swagger
- * /unsubscribe:
+ * /subscriptions/me:
+ *   get:
+ *     tags:
+ *       - Subscription
+ *     summary: Get current active subscription
+ *     security:
+ *       - Authorization: []
+ *     responses:
+ *       200:
+ *         description: Current subscription
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *       404:
+ *         description: No active subscription found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Internal server error
+ */
+subsRoutes.get('/me', requireAuth, getCurrentSubscription);
+
+/**
+ * @swagger
+ * /subscriptions/unsubscribe:
  *   post:
  *     tags:
  *       - Subscription
- *     summary: Cancel subscription
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               user_id:
- *                 type: string
- *                 description: User ID
+ *     summary: Cancel current active subscription
+ *     security:
+ *       - Authorization: []
  *     responses:
  *       200:
- *         description: Subscription canceled successfully
+ *         description: Subscription cancelled
  *         content:
  *           application/json:
  *             schema:
@@ -105,35 +115,34 @@ subsRoutes.get('/user/:id', getUserSubscription)
  *               properties:
  *                 success:
  *                   type: boolean
- *                   description: Success status
  *                 message:
  *                   type: string
- *                   description: Success message
- *                 data:
- *                   type: object
- *                   description: Subscription object
- * 
+ *       404:
+ *         description: No active subscription found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       500:
+ *         description: Internal server error
  */
-subsRoutes.post('/unsubscribe', cancelSubscription)
+subsRoutes.post('/unsubscribe', requireAuth, cancelSubscription);
+
 /**
  * @swagger
- * /subscribe/history/{user_id}:
+ * /subscriptions/history:
  *   get:
  *     tags:
  *       - Subscription
- *     summary: Get user subscription history
- *     parameters:
- *       - name: user_id
- *         in: path
- *         required: true
- *         type: string
- *         example: 1234
- *         description: User ID
- *         schema:
- *           type: string
+ *     summary: Get subscription history for the current user
+ *     security:
+ *       - Authorization: []
  *     responses:
  *       200:
- *         description: Success
+ *         description: Subscription history
  *         content:
  *           application/json:
  *             schema:
@@ -141,16 +150,11 @@ subsRoutes.post('/unsubscribe', cancelSubscription)
  *               properties:
  *                 success:
  *                   type: boolean
- *                   description: Success status
- *                 message:
- *                   type: string
- *                   description: Success message
  *                 data:
  *                   type: array
- *                   description: Array of subscriptions
- * 
+ *       500:
+ *         description: Internal server error
  */
-subsRoutes.get('/history/:user_id', getUserSubscriptionHistory);
+subsRoutes.get('/history', requireAuth, getUserSubscriptionHistory);
 
-
-export default subsRoutes
+export default subsRoutes;

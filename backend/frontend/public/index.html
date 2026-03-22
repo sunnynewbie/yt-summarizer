@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YouTube Summarizer Frontend</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">Feature 1</p>
+      <h1>Authentication Workflow</h1>
+      <p class="intro">
+        A simple frontend for the backend auth APIs. This first screen handles
+        register, login, current user lookup, token refresh, and logout.
+      </p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <div class="card-head">
+          <h2>Register</h2>
+          <span>`POST /auth/register`</span>
+        </div>
+        <form id="register-form" class="stack">
+          <label>
+            <span>Name</span>
+            <input class="input" type="text" name="name" placeholder="Sunny" />
+          </label>
+          <label>
+            <span>Email</span>
+            <input class="input" type="email" name="email" placeholder="sunny@example.com" required />
+          </label>
+          <label>
+            <span>Password</span>
+            <input class="input" type="password" name="password" placeholder="password123" required />
+          </label>
+          <button class="btn btn-primary" type="submit">Create account</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <h2>Login</h2>
+          <span>`POST /auth/login`</span>
+        </div>
+        <form id="login-form" class="stack">
+          <label>
+            <span>Email</span>
+            <input class="input" type="email" name="email" placeholder="sunny@example.com" required />
+          </label>
+          <label>
+            <span>Password</span>
+            <input class="input" type="password" name="password" placeholder="password123" required />
+          </label>
+          <button class="btn btn-primary" type="submit">Login</button>
+        </form>
+      </article>
+
+      <article class="card card-wide">
+        <div class="card-head">
+          <h2>Session</h2>
+          <span>Stored in `localStorage`</span>
+        </div>
+        <div class="actions">
+          <button id="me-btn" type="button" class="btn btn-secondary">Get current user</button>
+          <button id="refresh-btn" type="button" class="btn btn-secondary">Refresh access token</button>
+          <button id="logout-btn" type="button" class="btn btn-danger">Logout</button>
+        </div>
+
+        <div class="token-box">
+          <label>
+            <span>Access token</span>
+            <textarea class="input textarea" id="access-token" rows="5" readonly></textarea>
+          </label>
+          <label>
+            <span>Refresh token</span>
+            <textarea class="input textarea" id="refresh-token" rows="5" readonly></textarea>
+          </label>
+        </div>
+      </article>
+
+      <article class="card card-wide">
+        <div class="card-head">
+          <h2>API Response</h2>
+          <span>Latest result</span>
+        </div>
+        <pre id="response-output" class="response">Run an auth action to see the response.</pre>
+      </article>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
